@@ -8,7 +8,7 @@ import { useWindowSize } from "react-use";
 import Confetti from "react-confetti";
 
 export default function App() {
-	const [dice, setDice] = useState(generateAllNewDice());
+	const [dice, setDice] = useState(() => generateAllNewDice());
 	const { width, height } = useWindowSize();
 
 	const gameWon =
@@ -29,13 +29,17 @@ export default function App() {
 	}
 
 	function rollDice() {
-		setDice((oldDice) =>
-			oldDice.map((die) =>
-				die.isHeld
-					? die
-					: { ...die, value: Math.ceil(Math.random() * 6) }
-			)
-		);
+		if (!gameWon) {
+			setDice((oldDice) =>
+				oldDice.map((die) =>
+					die.isHeld
+						? die
+						: { ...die, value: Math.ceil(Math.random() * 6) }
+				)
+			);
+		} else {
+			setDice(generateAllNewDice());
+		}
 	}
 
 	function hold(id) {
